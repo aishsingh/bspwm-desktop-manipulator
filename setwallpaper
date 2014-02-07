@@ -1,0 +1,10 @@
+#!/bin/bash
+DMENU="dmenu -i"
+
+WALLPAPER_DIR="/home/aish/downloads/wallpapers"
+WALLPAPER=`ls $WALLPAPER_DIR \
+        | $DMENU -p "Choose a Wallpaper :" -sb \#B7CE42 -sf \#000000 -nb \#222222 -h 19 -dim .6`
+
+FEH="hsetroot -center"
+
+$FEH $WALLPAPER_DIR/"$WALLPAPER"

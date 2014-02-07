@@ -1,0 +1,12 @@
+#!/bin/bash
+
+DMENU="dmenu -i -noinput"
+
+DESKNAME=`$DMENU -p "Rename: " -sb \#B7CE42 -sf \#000000 -nb \#222222 -h 19 -dim .6`
+
+if [[ "$DESKNAME" != "" ]]
+then
+	FEH="bspc desktop -n"
+
+	$FEH "$DESKNAME"
+fi

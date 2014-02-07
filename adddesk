@@ -1,0 +1,69 @@
+#!/bin/bash
+
+if [ -n "$1" ]
+then
+	DESKNAME=$1	
+else
+	DMENU="dmenu -i"
+
+	DESKNAME=`echo -e "term\nwww\nmpd\ndocs\ndev\ngfx\ncode\nyt\nmedia\nirssi\nvm\nconfig\nsetup\ntmp\n" | $DMENU -p "Add: " -sb \#B7CE42 -sf \#000000 -nb \#222222 -h 19 -dim .6`
+fi
+
+if [[ "$DESKNAME" != "" ]]
+then
+	FEH="bspc monitor -a"
+
+	$FEH "$DESKNAME"
+	WMCTL=`wmctrl -d | awk 'END{print $1}'`
+	DESKNUM=`expr $WMCTL + 1`
+	WMCTL=`wmctrl -d | awk '/\*/ {print $1}'`
+	CURRENTDESKNUM=`expr $WMCTL + 1`
+	CURRENTDESKNAME=`bspc -D -d`
+
+	bspc desktop -f ^$DESKNUM
+#	bspc config -d focused window_gap -1
+	if [[ "$DESKNAME" == "mpd" ]]
+	then
+		urxvt -e ncmpcpp -s browser &
+		urxvt -e ncmpcpp -s visualizer &
+		sleep .5 && bspc desktop ^$DESKNUM -R 90
+		bspc config -d focused window_gap 24
+	elif [[ "$DESKNAME" == "term" ]]
+	then
+		urxvt &
+		bspc config -d focused window_gap -1
+	elif [[ "$DESKNAME" == "www" ]]
+	then
+		chromium &
+		bspc desktop ^$DESKNUM  -l monocle
+		bspc config -d focused window_gap -1
+	elif [[  "$DESKNAME" == "gfx" ]]
+	then
+		gimp &
+		bspc desktop ^$DESKNUM  -l monocle
+		bspc config -d focused window_gap -1
+	elif [[  "$DESKNAME" == "irssi" ]]
+	then
+		urxvt -e irssi &
+		bspc desktop ^$DESKNUM  -l monocle
+		bspc config -d focused window_gap -1
+	elif [[  "$DESKNAME" == "media" ]]
+	then
+		vlc &
+		bspc config -d focused window_gap 12
+	elif [[  "$DESKNAME" == "docs" ]]
+	then
+		libreoffice &
+		bspc config -d focused window_gap 12
+	elif [[  "$DESKNAME" == "vm" ]]
+	then
+		virtualbox &
+		bspc config -d focused window_gap -1
+	elif [[  "$DESKNAME" == "dev" ]]
+	then
+		bspc config -d focused window_gap -1
+		urxvt -e /bin/bash -c 'cd ~/dev && /bin/zsh'
+	else
+		bspc config -d focused window_gap -1
+	fi
+fi
